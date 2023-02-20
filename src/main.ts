@@ -14,7 +14,9 @@ async function run(): Promise<void> {
 
     // Ensure that the format parameter is set properly.
     if (format !== 'space-delimited' && format !== 'csv' && format !== 'json') {
-      core.setFailed(`Format must be one of 'string-delimited', 'csv', or 'json', got '${format}'.`)
+      core.setFailed(
+        `Format must be one of 'string-delimited', 'csv', or 'json', got '${format}'.`
+      )
     }
 
     // Debug log the payload.
