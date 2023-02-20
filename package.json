@@ -44,7 +44,7 @@
     "@actions/github": "^5.1.1"
   },
   "devDependencies": {
-    "@octokit/rest": "^18.12.0",
+    "@octokit/rest": "^19.0.7",
     "@types/jest": "^25.1.1",
     "@types/node": "^12.12.29",
     "@typescript-eslint/parser": "^2.8.0",
