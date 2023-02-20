@@ -899,10 +899,10 @@
     semver "^7.3.2"
     tsutils "^3.17.1"
 
-"@zeit/ncc@^0.21.0":
-  version "0.21.1"
-  resolved "https://registry.yarnpkg.com/@zeit/ncc/-/ncc-0.21.1.tgz#44fd4359c54ba34a018a5ccf7a315489db20a733"
-  integrity sha512-M9WzgquSOt2nsjRkYM9LRylBLmmlwNCwYbm3Up3PDEshfvdmIfqpFNSK8EJvR18NwZjGHE5z2avlDtYQx2JQnw==
+"@vercel/ncc@^0.36.1":
+  version "0.36.1"
+  resolved "https://registry.yarnpkg.com/@vercel/ncc/-/ncc-0.36.1.tgz#d4c01fdbbe909d128d1bf11c7f8b5431654c5b95"
+  integrity sha512-S4cL7Taa9yb5qbv+6wLgiKVZ03Qfkc4jGRuiUQMQ8HGBD5pcNRnHeYM33zBvJE4/zJGjJJ8GScB+WmTsn9mORw==
 
 abab@^2.0.0:
   version "2.0.6"
