@@ -105,7 +105,12 @@ function run() {
                 core.setFailed('Error pulling files from response payload.');
                 return;
             }
-            const all = [], added = [], modified = [], removed = [], renamed = [], addedModified = [];
+            const all = [];
+            const added = [];
+            const modified = [];
+            const removed = [];
+            const renamed = [];
+            const addedModified = [];
             for (const file of files) {
                 const filename = file.filename;
                 // If we're using the 'space-delimited' format and any of the filenames have a space in them,
@@ -135,7 +140,12 @@ function run() {
                 }
             }
             // Format the arrays of changed files.
-            let allFormatted, addedFormatted, modifiedFormatted, removedFormatted, renamedFormatted, addedModifiedFormatted;
+            let allFormatted;
+            let addedFormatted;
+            let modifiedFormatted;
+            let removedFormatted;
+            let renamedFormatted;
+            let addedModifiedFormatted;
             switch (format) {
                 case 'space-delimited':
                     // If any of the filenames have a space in them, then fail the step.
