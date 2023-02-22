@@ -1,6 +1,64 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 8657:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getInputs = void 0;
+const core = __importStar(__nccwpck_require__(2186));
+function getInputs() {
+    return __awaiter(this, void 0, void 0, function* () {
+        //github token
+        const token = core.getInput('token', { required: true });
+        //output format
+        const format = core.getInput('format', { required: true });
+        // Ensure that the format parameter is set properly.
+        if (format !== 'space-delimited' && format !== 'csv' && format !== 'json') {
+            throw new Error(`Format must be one of 'string-delimited', 'csv', or 'json', got '${format}'.`);
+        }
+        return { token, format };
+    });
+}
+exports.getInputs = getInputs;
+
+
+/***/ }),
+
 /***/ 3109:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -41,18 +99,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
+const input = __importStar(__nccwpck_require__(8657));
 function run() {
     var _a, _b, _c, _d;
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const context = github.context;
-            // Create GitHub client with the API token.
-            const client = github.getOctokit(core.getInput('token', { required: true }));
-            const format = core.getInput('format', { required: true });
-            // Ensure that the format parameter is set properly.
-            if (format !== 'space-delimited' && format !== 'csv' && format !== 'json') {
-                core.setFailed(`Format must be one of 'string-delimited', 'csv', or 'json', got '${format}'.`);
-            }
+            // resolve inputs
+            const inputs = yield input.getInputs();
             // Debug log the payload.
             core.debug(`Payload keys: ${Object.keys(context.payload)}`);
             // Get event name.
@@ -86,7 +140,9 @@ function run() {
             }
             // Use GitHub's compare two commits API.
             // https://developer.github.com/v3/repos/commits/#compare-two-commits
-            const response = yield client.rest.repos.compareCommits({
+            const response = yield github
+                .getOctokit(inputs.token)
+                .rest.repos.compareCommits({
                 base,
                 head,
                 owner: context.repo.owner,
@@ -119,7 +175,7 @@ function run() {
                 const filename = file.filename;
                 // If we're using the 'space-delimited' format and any of the filenames have a space in them,
                 // then fail the step.
-                if (format === 'space-delimited' && filename.includes(' ')) {
+                if (inputs.format === 'space-delimited' && filename.includes(' ')) {
                     core.setFailed(`One of your files includes a space. Consider using a different output format or removing spaces from your filenames. ` +
                         "Please submit an issue on this action's GitHub repo.");
                 }
@@ -150,7 +206,7 @@ function run() {
             let removedFormatted;
             let renamedFormatted;
             let addedModifiedFormatted;
-            switch (format) {
+            switch (inputs.format) {
                 case 'space-delimited':
                     // If any of the filenames have a space in them, then fail the step.
                     for (const file of all) {

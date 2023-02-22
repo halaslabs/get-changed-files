@@ -1,15 +1,15 @@
 import * as core from '@actions/core'
-import * as input from './input'
 import * as github from '@actions/github'
+import * as input from './input'
 
 type FileStatus = 'added' | 'modified' | 'removed' | 'renamed'
 
 async function run(): Promise<void> {
   try {
-    const context = github.context;
+    const context = github.context
 
     // resolve inputs
-    const inputs = await input.getInputs();
+    const inputs = await input.getInputs()
 
     // Debug log the payload.
     core.debug(`Payload keys: ${Object.keys(context.payload)}`)
@@ -55,12 +55,14 @@ async function run(): Promise<void> {
 
     // Use GitHub's compare two commits API.
     // https://developer.github.com/v3/repos/commits/#compare-two-commits
-    const response = await client.rest.repos.compareCommits({
-      base,
-      head,
-      owner: context.repo.owner,
-      repo: context.repo.repo
-    })
+    const response = await github
+      .getOctokit(inputs.token)
+      .rest.repos.compareCommits({
+        base,
+        head,
+        owner: context.repo.owner,
+        repo: context.repo.repo
+      })
 
     // Ensure that the request was successful.
     if (response.status !== 200) {
