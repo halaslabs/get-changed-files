@@ -51,9 +51,8 @@ async function run(): Promise<void> {
     // https://developer.github.com/v3/repos/commits/#compare-two-commits
     const response = await github
       .getOctokit(inputs.token)
-      .rest.repos.compareCommits({
-        base,
-        head,
+      .rest.repos.compareCommitsWithBasehead({
+        basehead: `${base}...${head}`,
         owner: context.repo.owner,
         repo: context.repo.repo
       })
