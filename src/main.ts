@@ -2,8 +2,6 @@ import * as core from '@actions/core'
 import * as github from '@actions/github'
 import * as input from './input'
 
-type FileStatus = 'added' | 'modified' | 'removed' | 'renamed'
-
 async function run(): Promise<void> {
   try {
     const context = github.context
@@ -31,7 +29,7 @@ async function run(): Promise<void> {
         head = context.payload.after
         break
       default:
-        core.setFailed(
+        throw new Error(
           `This action only supports pull requests and pushes, ${context.eventName} events are not supported. ` +
             "Please submit an issue on this action's GitHub repo if you believe this in correct."
         )
@@ -43,14 +41,10 @@ async function run(): Promise<void> {
 
     // Ensure that the base and head properties are set on the payload.
     if (!base || !head) {
-      core.setFailed(
+      throw new Error(
         `The base and head commits are missing from the payload for this ${context.eventName} event. ` +
           "Please submit an issue on this action's GitHub repo."
       )
-
-      // To satisfy TypeScript, even though this is unreachable.
-      base = ''
-      head = ''
     }
 
     // Use GitHub's compare two commits API.
@@ -66,7 +60,7 @@ async function run(): Promise<void> {
 
     // Ensure that the request was successful.
     if (response.status !== 200) {
-      core.setFailed(
+      throw new Error(
         `The GitHub API for comparing the base and head commits for this ${context.eventName} event returned ${response.status}, expected 200. ` +
           "Please submit an issue on this action's GitHub repo."
       )
@@ -74,7 +68,7 @@ async function run(): Promise<void> {
 
     // Ensure that the head commit is ahead of the base commit.
     if (response.data.status !== 'ahead') {
-      core.setFailed(
+      throw new Error(
         `The head commit for this ${context.eventName} event is not ahead of the base commit. ` +
           "Please submit an issue on this action's GitHub repo."
       )
@@ -85,8 +79,7 @@ async function run(): Promise<void> {
 
     //check if files is undefined
     if (files === undefined) {
-      core.setFailed('Error pulling files from response payload.')
-      return
+      throw new Error('Error pulling files from response payload.')
     }
 
     const all = [] as string[]
@@ -101,13 +94,13 @@ async function run(): Promise<void> {
       // If we're using the 'space-delimited' format and any of the filenames have a space in them,
       // then fail the step.
       if (inputs.format === 'space-delimited' && filename.includes(' ')) {
-        core.setFailed(
+        throw new Error(
           `One of your files includes a space. Consider using a different output format or removing spaces from your filenames. ` +
             "Please submit an issue on this action's GitHub repo."
         )
       }
       all.push(filename)
-      switch (file.status as FileStatus) {
+      switch (file.status) {
         case 'added':
           added.push(filename)
           addedModified.push(filename)
@@ -123,7 +116,7 @@ async function run(): Promise<void> {
           renamed.push(filename)
           break
         default:
-          core.setFailed(
+          throw new Error(
             `One of your files includes an unsupported file status '${file.status}', expected 'added', 'modified', 'removed', or 'renamed'.`
           )
       }
@@ -141,7 +134,7 @@ async function run(): Promise<void> {
         // If any of the filenames have a space in them, then fail the step.
         for (const file of all) {
           if (file.includes(' '))
-            core.setFailed(
+            throw new Error(
               `One of your files includes a space. Consider using a different output format or removing spaces from your filenames.`
             )
         }
