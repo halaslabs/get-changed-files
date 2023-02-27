@@ -1,6 +1,5 @@
 import * as core from '@actions/core'
-
-type Format = 'space-delimited' | 'csv' | 'json'
+import type {Format} from './types'
 
 interface Inputs {
   format: Format
