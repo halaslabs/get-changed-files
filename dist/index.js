@@ -1,6 +1,113 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 6610:
+/***/ (function(__unused_webpack_module, exports) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.formatFiles = void 0;
+function formatFiles(files, format) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const all = [];
+        const added = [];
+        const modified = [];
+        const removed = [];
+        const renamed = [];
+        const addedModified = [];
+        for (const file of files) {
+            const filename = file.filename;
+            // If we're using the 'space-delimited' format and any of the filenames have a space in them,
+            // then fail the step.
+            if (format === 'space-delimited' && filename.includes(' ')) {
+                throw new Error(`One of your files includes a space. Consider using a different output format or removing spaces from your filenames. ` +
+                    "Please submit an issue on this action's GitHub repo.");
+            }
+            all.push(filename);
+            switch (file.status) {
+                case 'added':
+                    added.push(filename);
+                    addedModified.push(filename);
+                    break;
+                case 'modified':
+                    modified.push(filename);
+                    addedModified.push(filename);
+                    break;
+                case 'removed':
+                    removed.push(filename);
+                    break;
+                case 'renamed':
+                    renamed.push(filename);
+                    break;
+                default:
+                    throw new Error(`One of your files includes an unsupported file status '${file.status}', expected 'added', 'modified', 'removed', or 'renamed'.`);
+            }
+        }
+        // Format the arrays of changed files.
+        let allFormatted;
+        let addedFormatted;
+        let modifiedFormatted;
+        let removedFormatted;
+        let renamedFormatted;
+        let addedModifiedFormatted;
+        switch (format) {
+            case 'space-delimited':
+                // If any of the filenames have a space in them, then fail the step.
+                for (const file of all) {
+                    if (file.includes(' '))
+                        throw new Error(`One of your files includes a space. Consider using a different output format or removing spaces from your filenames.`);
+                }
+                allFormatted = all.join(' ');
+                addedFormatted = added.join(' ');
+                modifiedFormatted = modified.join(' ');
+                removedFormatted = removed.join(' ');
+                renamedFormatted = renamed.join(' ');
+                addedModifiedFormatted = addedModified.join(' ');
+                break;
+            case 'csv':
+                allFormatted = all.join(',');
+                addedFormatted = added.join(',');
+                modifiedFormatted = modified.join(',');
+                removedFormatted = removed.join(',');
+                renamedFormatted = renamed.join(',');
+                addedModifiedFormatted = addedModified.join(',');
+                break;
+            case 'json':
+                allFormatted = JSON.stringify(all);
+                addedFormatted = JSON.stringify(added);
+                modifiedFormatted = JSON.stringify(modified);
+                removedFormatted = JSON.stringify(removed);
+                renamedFormatted = JSON.stringify(renamed);
+                addedModifiedFormatted = JSON.stringify(addedModified);
+                break;
+            default:
+                throw new Error(`Unsupported format '${format}', expected 'space-delimited', 'csv', or 'json'.`);
+        }
+        return {
+            allFormatted,
+            addedFormatted,
+            modifiedFormatted,
+            removedFormatted,
+            renamedFormatted,
+            addedModifiedFormatted
+        };
+    });
+}
+exports.formatFiles = formatFiles;
+
+
+/***/ }),
+
 /***/ 8657:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -99,14 +206,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
-const input = __importStar(__nccwpck_require__(8657));
+const format_1 = __nccwpck_require__(6610);
+const input_1 = __nccwpck_require__(8657);
 function run() {
     var _a, _b, _c, _d;
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const context = github.context;
             // resolve inputs
-            const inputs = yield input.getInputs();
+            const inputs = yield (0, input_1.getInputs)();
             // Debug log the payload.
             core.debug(`Payload keys: ${Object.keys(context.payload)}`);
             // Get event name.
@@ -139,9 +247,8 @@ function run() {
             // https://developer.github.com/v3/repos/commits/#compare-two-commits
             const response = yield github
                 .getOctokit(inputs.token)
-                .rest.repos.compareCommits({
-                base,
-                head,
+                .rest.repos.compareCommitsWithBasehead({
+                basehead: `${base}...${head}`,
                 owner: context.repo.owner,
                 repo: context.repo.repo
             });
@@ -161,78 +268,8 @@ function run() {
             if (files === undefined) {
                 throw new Error('Error pulling files from response payload.');
             }
-            const all = [];
-            const added = [];
-            const modified = [];
-            const removed = [];
-            const renamed = [];
-            const addedModified = [];
-            for (const file of files) {
-                const filename = file.filename;
-                // If we're using the 'space-delimited' format and any of the filenames have a space in them,
-                // then fail the step.
-                if (inputs.format === 'space-delimited' && filename.includes(' ')) {
-                    throw new Error(`One of your files includes a space. Consider using a different output format or removing spaces from your filenames. ` +
-                        "Please submit an issue on this action's GitHub repo.");
-                }
-                all.push(filename);
-                switch (file.status) {
-                    case 'added':
-                        added.push(filename);
-                        addedModified.push(filename);
-                        break;
-                    case 'modified':
-                        modified.push(filename);
-                        addedModified.push(filename);
-                        break;
-                    case 'removed':
-                        removed.push(filename);
-                        break;
-                    case 'renamed':
-                        renamed.push(filename);
-                        break;
-                    default:
-                        throw new Error(`One of your files includes an unsupported file status '${file.status}', expected 'added', 'modified', 'removed', or 'renamed'.`);
-                }
-            }
-            // Format the arrays of changed files.
-            let allFormatted;
-            let addedFormatted;
-            let modifiedFormatted;
-            let removedFormatted;
-            let renamedFormatted;
-            let addedModifiedFormatted;
-            switch (inputs.format) {
-                case 'space-delimited':
-                    // If any of the filenames have a space in them, then fail the step.
-                    for (const file of all) {
-                        if (file.includes(' '))
-                            throw new Error(`One of your files includes a space. Consider using a different output format or removing spaces from your filenames.`);
-                    }
-                    allFormatted = all.join(' ');
-                    addedFormatted = added.join(' ');
-                    modifiedFormatted = modified.join(' ');
-                    removedFormatted = removed.join(' ');
-                    renamedFormatted = renamed.join(' ');
-                    addedModifiedFormatted = addedModified.join(' ');
-                    break;
-                case 'csv':
-                    allFormatted = all.join(',');
-                    addedFormatted = added.join(',');
-                    modifiedFormatted = modified.join(',');
-                    removedFormatted = removed.join(',');
-                    renamedFormatted = renamed.join(',');
-                    addedModifiedFormatted = addedModified.join(',');
-                    break;
-                case 'json':
-                    allFormatted = JSON.stringify(all);
-                    addedFormatted = JSON.stringify(added);
-                    modifiedFormatted = JSON.stringify(modified);
-                    removedFormatted = JSON.stringify(removed);
-                    renamedFormatted = JSON.stringify(renamed);
-                    addedModifiedFormatted = JSON.stringify(addedModified);
-                    break;
-            }
+            // Format the changed files.
+            const { allFormatted, addedFormatted, modifiedFormatted, removedFormatted, renamedFormatted, addedModifiedFormatted } = yield (0, format_1.formatFiles)(files, inputs.format);
             // Log the output values.
             core.info(`All: ${allFormatted}`);
             core.info(`Added: ${addedFormatted}`);
