@@ -51,6 +51,8 @@ export async function getFileChanges(token: string): Promise<DiffEntry[]> {
     repo: context.repo.repo
   })
 
+  core.debug(`Response: ${JSON.stringify(response)}`)
+
   // Ensure that the request was successful.
   if (response.status !== 200) {
     throw new Error(
