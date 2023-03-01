@@ -19,7 +19,7 @@ async function run(): Promise<void> {
       removedFormatted,
       renamedFormatted,
       addedModifiedFormatted
-    } = await formatFiles(files, inputs.format)
+    } = formatFiles(files, inputs.format)
 
     // Log the output values.
     core.info(`All: ${allFormatted}`)
