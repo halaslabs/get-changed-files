@@ -6,7 +6,7 @@ interface Inputs {
   token: string
 }
 
-export async function getInputs(): Promise<Inputs> {
+export function getInputs(): Inputs {
   //github token
   const token = core.getInput('token', {required: true})
 

@@ -237,30 +237,19 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getInputs = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 function getInputs() {
-    return __awaiter(this, void 0, void 0, function* () {
-        //github token
-        const token = core.getInput('token', { required: true });
-        //output format
-        const format = core.getInput('format', { required: true });
-        // Ensure that the format parameter is set properly.
-        if (format !== 'space-delimited' && format !== 'csv' && format !== 'json') {
-            throw new Error(`Format must be one of 'string-delimited', 'csv', or 'json', got '${format}'.`);
-        }
-        return { token, format };
-    });
+    //github token
+    const token = core.getInput('token', { required: true });
+    //output format
+    const format = core.getInput('format', { required: true });
+    // Ensure that the format parameter is set properly.
+    if (format !== 'space-delimited' && format !== 'csv' && format !== 'json') {
+        throw new Error(`Format must be one of 'string-delimited', 'csv', or 'json', got '${format}'.`);
+    }
+    return { token, format };
 }
 exports.getInputs = getInputs;
 
@@ -313,7 +302,7 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             // resolve inputs
-            const inputs = yield (0, input_1.getInputs)();
+            const inputs = (0, input_1.getInputs)();
             // compare commits
             const files = yield (0, github_1.getFileChanges)(inputs.token);
             // Format the changed files.

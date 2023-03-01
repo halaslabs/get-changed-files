@@ -6,7 +6,7 @@ import {getInputs} from './input'
 async function run(): Promise<void> {
   try {
     // resolve inputs
-    const inputs = await getInputs()
+    const inputs = getInputs()
 
     // compare commits
     const files = await getFileChanges(inputs.token)
