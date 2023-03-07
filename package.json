@@ -30,7 +30,7 @@
     "node": "^16.0.0"
   },
   "scripts": {
-    "all": "yarn clean && yarn build && yarn format && yarn lint && yarn package && yarn test",
+    "all": "yarn clean && yarn build && yarn format && yarn lint && yarn package",
     "build": "tsc",
     "clean": "rimraf dist/**/* lib/**/*",
     "format": "prettier --write **/*.ts",

@@ -7,8 +7,8 @@ on:
       - main
 
 jobs:
-  build:
-    name: Build
+  validate:
+    name: Test and Validate Build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -19,12 +19,13 @@ jobs:
           node-version: 16
 
       - name: Install dependencies
-        run: |
-          yarn
+        run: yarn
 
-      - name: Clean, build, format, lint, package, and test
-        run: |
-          yarn all
+      - name: Run tests
+        run: yarn test
+
+      - name: Clean, build, format, lint, and package
+        run: yarn all
 
       - name: Check if packaged properly
         run: |
@@ -38,8 +39,8 @@ jobs:
             exit 1
           fi
 
-  test:
-    name: Test
+  integration-test:
+    name: Run Action
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -57,3 +58,7 @@ jobs:
           echo 'steps.files.outputs.removed=${{ steps.files.outputs.removed }}'
           echo 'steps.files.outputs.renamed=${{ steps.files.outputs.renamed }}'
           echo 'steps.files.outputs.added_modified=${{ steps.files.outputs.added_modified }}'
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
