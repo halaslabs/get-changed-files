@@ -5,7 +5,7 @@ import globRegex from 'glob-regex'
 
 interface Inputs {
   format: Format
-  token: string,
+  token: string
   filters: string[]
 }
 
@@ -24,20 +24,22 @@ export function getInputs(): Inputs {
   }
 
   //path filters
-  const filters = core.getMultilineInput('path-filter', {required: false}).map((filter: string) => {
-    // If filter is a regexp return it
-    if (filter.startsWith('/') && filter.endsWith('/')) {
-      return filter
-    }
-    // if filter is a glob convert to regexp
-    if (isGLob(filter)) {
-      return globRegex.replace(filter)
-    }
-    
-    throw new Error(
-      `Path filter must be a glob or a regexp, got '${filter}'.`
-    )
-  });
+  const filters = core
+    .getMultilineInput('path-filters', {required: false})
+    .map((filter: string) => {
+      // If filter is a regexp return it
+      if (filter.startsWith('/') && filter.endsWith('/')) {
+        return filter
+      }
+      // if filter is a glob convert to regexp
+      if (isGLob(filter)) {
+        return globRegex.replace(filter)
+      }
+
+      throw new Error(
+        `Path filter must be a glob or a regexp, got '${filter}'.`
+      )
+    })
 
   return {token, format, filters}
 }

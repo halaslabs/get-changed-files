@@ -8,7 +8,7 @@ inputs:
       Users shouldn't need to set this themselves.
     required: true
     default: ${{ github.token }}
-  path-filter:
+  path-filters:
     description: >
       Filter files by path.
       Can be glob patterns or a regular expressions.
