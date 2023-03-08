@@ -9,6 +9,9 @@
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.filterFiles = void 0;
 function filterFiles(filters, files) {
+    if (filters.length === 0) {
+        return files;
+    }
     return files.filter(file => {
         const filename = file.filename;
         return filters.some(filter => {
@@ -199,11 +202,6 @@ function getFileChanges(token) {
         // Ensure that the request was successful.
         if (response.status !== 200) {
             throw new Error(`The GitHub API for comparing the base and head commits for this ${github_1.context.eventName} event returned ${response.status}, expected 200. ` +
-                "Please submit an issue on this action's GitHub repo.");
-        }
-        // Ensure that the head commit is ahead of the base commit.
-        if (response.data.status !== 'ahead') {
-            throw new Error(`The head commit for this ${github_1.context.eventName} event is not ahead of the base commit. ` +
                 "Please submit an issue on this action's GitHub repo.");
         }
         if (response.data.files === undefined) {

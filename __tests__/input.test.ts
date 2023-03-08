@@ -3,6 +3,7 @@ import {getInputs} from '../src/input'
 beforeEach(() => {
   delete process.env['INPUT_FORMAT']
   delete process.env['INPUT_TOKEN']
+  delete process.env['INPUT_PATH-FILTERS']
 })
 
 const setInputs = (
@@ -12,7 +13,7 @@ const setInputs = (
 ) => {
   process.env['INPUT_FORMAT'] = format
   process.env['INPUT_TOKEN'] = token
-  process.env['INPUT_PATH-FILTER'] = filters.join('\n')
+  process.env['INPUT_PATH-FILTERS'] = filters.join('\n')
 }
 
 //token and format return when supplied and correct values
