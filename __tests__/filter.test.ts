@@ -7,6 +7,13 @@ const getFiles = () => {
   ).files
 }
 
+//test when no filters are provided all files are returned
+test('no filters', () => {
+  const filters = [] as string[]
+  const files = filterFiles(filters, getFiles())
+  expect(files.length).toBe(8)
+})
+
 //test no filters match
 test('no matching files', () => {
   const filters = ['nothing']
