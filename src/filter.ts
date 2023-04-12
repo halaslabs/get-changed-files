@@ -9,10 +9,10 @@ export function filterFiles(
     return files
   }
   const testRexExp = (regex: string, filename: string): boolean => {
-      if (regex.startsWith('/') && regex.endsWith('/')) {
-        return new RegExp(regex.slice(1, -1)).test(filename)
-      }
-      return new RegExp(regex).test(filename)
+    if (regex.startsWith('/') && regex.endsWith('/')) {
+      return new RegExp(regex.slice(1, -1)).test(filename)
+    }
+    return new RegExp(regex).test(filename)
   }
   if (filters.length !== 0) {
     files = files.filter(file => {

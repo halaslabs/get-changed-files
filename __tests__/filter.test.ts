@@ -89,7 +89,7 @@ test('multiple exclusions, excludes multiple files', () => {
   const exclusions = ['/path1/', '/path4/']
   const files = filterFiles([], exclusions, getFiles())
   expect(files.length).toBe(6)
-});
+})
 
 //test single filter and single exclusion
 test('single filter and single exclusion', () => {
