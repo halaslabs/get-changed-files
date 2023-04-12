@@ -86,9 +86,46 @@ Consider using one of the other formats if that's the case.
 - run: |
     readarray -t files <<<"$(jq -r '.[]' <<<'${{ steps.files.outputs.all }}')"
     for file in ${files[@]}; do
-      echo "Do something with this ${file}. from .github or tests/**"
+      echo "Do something with this ${file} from .github or tests/**"
     done
 ```
+
+## Get files changed but exclude some files by directory
+```yaml
+- id: files
+  uses: halaslabs/get-changed-files@v2
+  with:
+    format: 'json'
+    path-exclusions: |
+      /.github/
+      __tests__/**
+      
+- run: |
+    readarray -t files <<<"$(jq -r '.[]' <<<'${{ steps.files.outputs.all }}')"
+    for file in ${files[@]}; do
+      echo "Do something with this ${file} not from .github or tests/**"
+    done
+```
+
+## Get all files changed in specific directories and exclude a directory from the result set
+```yaml
+- id: files
+  uses: halaslabs/get-changed-files@v2
+  with:
+    format: 'json'
+    path-filters: |
+      /.github/
+      __tests__/**
+    path-exclusions: |
+      /.github/workflows/**
+      
+- run: |
+    readarray -t files <<<"$(jq -r '.[]' <<<'${{ steps.files.outputs.all }}')"
+    for file in ${files[@]}; do
+      echo "Do something with this ${file} from .github or tests/** but not from .github/workflows/**" 
+    done
+```
+
 
 # Install, Build, Lint, Test, and Package
 
