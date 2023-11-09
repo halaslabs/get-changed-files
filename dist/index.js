@@ -8,19 +8,27 @@
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.filterFiles = void 0;
-function filterFiles(filters, files) {
-    if (filters.length === 0) {
+function filterFiles(filters, exclusions, files) {
+    if (filters.length === 0 && exclusions.length === 0) {
         return files;
     }
-    return files.filter(file => {
-        const filename = file.filename;
-        return filters.some(filter => {
-            if (filter.startsWith('/') && filter.endsWith('/')) {
-                return new RegExp(filter.slice(1, -1)).test(filename);
-            }
-            return new RegExp(filter).test(filename);
+    const testRexExp = (regex, filename) => {
+        if (regex.startsWith('/') && regex.endsWith('/')) {
+            return new RegExp(regex.slice(1, -1)).test(filename);
+        }
+        return new RegExp(regex).test(filename);
+    };
+    if (filters.length !== 0) {
+        files = files.filter(file => {
+            return filters.some(filter => testRexExp(filter, file.filename));
         });
-    });
+    }
+    if (exclusions.length !== 0) {
+        files = files.filter(file => {
+            return !exclusions.some(exclusion => testRexExp(exclusion, file.filename));
+        });
+    }
+    return files;
 }
 exports.filterFiles = filterFiles;
 
@@ -259,21 +267,28 @@ function getInputs() {
     if (format !== 'space-delimited' && format !== 'csv' && format !== 'json') {
         throw new Error(`Format must be one of 'string-delimited', 'csv', or 'json', got '${format}'.`);
     }
+    const mapFilterStringToRegex = (input, options) => {
+        return core.getMultilineInput(input, options).map((filter) => {
+            // If filter is a regexp return it
+            if (filter.startsWith('/') && filter.endsWith('/')) {
+                return filter;
+            }
+            // if filter is a glob convert to regexp
+            if ((0, is_glob_1.default)(filter)) {
+                return glob_regex_1.default.replace(filter);
+            }
+            throw new Error(`Path filter must be a glob or a regexp, got '${filter}'.`);
+        });
+    };
     //path filters
-    const filters = core
-        .getMultilineInput('path-filters', { required: false })
-        .map((filter) => {
-        // If filter is a regexp return it
-        if (filter.startsWith('/') && filter.endsWith('/')) {
-            return filter;
-        }
-        // if filter is a glob convert to regexp
-        if ((0, is_glob_1.default)(filter)) {
-            return glob_regex_1.default.replace(filter);
-        }
-        throw new Error(`Path filter must be a glob or a regexp, got '${filter}'.`);
+    const filters = mapFilterStringToRegex('path-filters', {
+        required: false
     });
-    return { token, format, filters };
+    //path exclusions
+    const exclusions = mapFilterStringToRegex('path-exclusions', {
+        required: false
+    });
+    return { token, format, filters, exclusions };
 }
 exports.getInputs = getInputs;
 
@@ -330,8 +345,9 @@ function run() {
             const inputs = (0, input_1.getInputs)();
             // compare commits
             const files = yield (0, github_1.getFileChanges)(inputs.token);
+            const filteredFiles = (0, filter_1.filterFiles)(inputs.filters, inputs.exclusions, files);
             // Format the changed files.
-            const { allFormatted, addedFormatted, modifiedFormatted, removedFormatted, renamedFormatted, addedModifiedFormatted } = (0, format_1.formatFiles)((0, filter_1.filterFiles)(inputs.filters, files), inputs.format);
+            const { allFormatted, addedFormatted, modifiedFormatted, removedFormatted, renamedFormatted, addedModifiedFormatted } = (0, format_1.formatFiles)(filteredFiles, inputs.format);
             // Log the output values.
             core.info(`All: ${allFormatted}`);
             core.info(`Added: ${addedFormatted}`);

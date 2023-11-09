@@ -2,11 +2,13 @@ import * as core from '@actions/core'
 import type {Format} from './types'
 import isGLob from 'is-glob'
 import globRegex from 'glob-regex'
+import {InputOptions} from '@actions/core'
 
 interface Inputs {
   format: Format
   token: string
   filters: string[]
+  exclusions: string[]
 }
 
 export function getInputs(): Inputs {
@@ -23,10 +25,11 @@ export function getInputs(): Inputs {
     )
   }
 
-  //path filters
-  const filters = core
-    .getMultilineInput('path-filters', {required: false})
-    .map((filter: string) => {
+  const mapFilterStringToRegex = (
+    input: string,
+    options: InputOptions
+  ): string[] => {
+    return core.getMultilineInput(input, options).map((filter: string) => {
       // If filter is a regexp return it
       if (filter.startsWith('/') && filter.endsWith('/')) {
         return filter
@@ -40,6 +43,17 @@ export function getInputs(): Inputs {
         `Path filter must be a glob or a regexp, got '${filter}'.`
       )
     })
+  }
 
-  return {token, format, filters}
+  //path filters
+  const filters = mapFilterStringToRegex('path-filters', {
+    required: false
+  })
+
+  //path exclusions
+  const exclusions = mapFilterStringToRegex('path-exclusions', {
+    required: false
+  })
+
+  return {token, format, filters, exclusions}
 }

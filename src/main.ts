@@ -12,6 +12,8 @@ async function run(): Promise<void> {
     // compare commits
     const files = await getFileChanges(inputs.token)
 
+    const filteredFiles = filterFiles(inputs.filters, inputs.exclusions, files)
+
     // Format the changed files.
     const {
       allFormatted,
@@ -20,7 +22,7 @@ async function run(): Promise<void> {
       removedFormatted,
       renamedFormatted,
       addedModifiedFormatted
-    } = formatFiles(filterFiles(inputs.filters, files), inputs.format)
+    } = formatFiles(filteredFiles, inputs.format)
 
     // Log the output values.
     core.info(`All: ${allFormatted}`)

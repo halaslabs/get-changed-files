@@ -4,19 +4,22 @@ beforeEach(() => {
   delete process.env['INPUT_FORMAT']
   delete process.env['INPUT_TOKEN']
   delete process.env['INPUT_PATH-FILTERS']
+  delete process.env['INPUT_PATH-EXCLUSIONS']
 })
 
 const setInputs = (
   format: string = 'csv',
   token: string = 'token',
-  filters: string[] = []
+  filters: string[] = [],
+  exclusions: string[] = []
 ) => {
   process.env['INPUT_FORMAT'] = format
   process.env['INPUT_TOKEN'] = token
   process.env['INPUT_PATH-FILTERS'] = filters.join('\n')
+  process.env['INPUT_PATH-EXCLUSIONS'] = exclusions.join('\n')
 }
 
-//token and format return when supplied and correct values
+// token and format return when supplied and correct values
 test('get valid inputs', () => {
   setInputs()
   const {token, format} = getInputs()
@@ -48,14 +51,14 @@ test('optional path-filters', () => {
   expect(filters).toEqual([])
 })
 
-// test path-filters is accepts single line
+// test path-filters accepts single line
 test('single line path-filters', () => {
   setInputs('csv', 'token', ['/foo/'])
   const {filters} = getInputs()
   expect(filters).toEqual(['/foo/'])
 })
 
-// test path-filters is accepts multiple lines
+// test path-filters accept multiple lines
 test('multiple line path-filters', () => {
   setInputs('csv', 'token', ['/foo/', '*.bar'])
   const {filters} = getInputs()
@@ -79,5 +82,46 @@ test('glob to regex', () => {
 // test path-filters throws error when not a glob or regexp
 test('invalid path-filter', () => {
   setInputs('csv', 'token', ['foo'])
+  expect(() => getInputs()).toThrowError()
+})
+
+// test path-exclusions is optional
+test('optional path-exclusions', () => {
+  setInputs()
+  const {exclusions} = getInputs()
+  expect(exclusions).toEqual([])
+})
+
+// test path-exclusions accepts single line
+test('single line path-exclusions', () => {
+  setInputs('csv', 'token', [], ['/foo/'])
+  const {exclusions} = getInputs()
+  expect(exclusions).toEqual(['/foo/'])
+})
+
+// test path-exclusions accept multiple lines
+test('multiple line path-exclusions', () => {
+  setInputs('csv', 'token', [], ['/foo/', '*.bar'])
+  const {exclusions} = getInputs()
+  expect(exclusions).toEqual(['/foo/', '([^/]+)\\.bar'])
+})
+
+// test path-exclusions leaves regexps alone
+test('unmodified regex', () => {
+  setInputs('csv', 'token', [], ['/.github/'])
+  const {exclusions} = getInputs()
+  expect(exclusions).toEqual(['/.github/'])
+})
+
+// test path-exclusions converts glob to regex
+test('glob to regex', () => {
+  setInputs('csv', 'token', [], ['**/*.ts'])
+  const {exclusions} = getInputs()
+  expect(exclusions).toEqual(['(.+/)?([^/]+)\\.ts'])
+})
+
+// test path-exclusions throws error when not a glob or regexp
+test('invalid path-exclusion', () => {
+  setInputs('csv', 'token', [], ['foo'])
   expect(() => getInputs()).toThrowError()
 })
