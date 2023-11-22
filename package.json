@@ -50,7 +50,7 @@
     "@octokit/rest": "^20.0.2",
     "@types/is-glob": "^4.0.2",
     "@types/jest": "^26.0.14",
-    "@types/node": "^18.18.4",
+    "@types/node": "^18.18.12",
     "@typescript-eslint/parser": "^6.10.0",
     "@vercel/ncc": "^0.38.0",
     "eslint": "^8.51.0",
