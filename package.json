@@ -51,7 +51,7 @@
     "@types/is-glob": "^4.0.4",
     "@types/jest": "^26.0.14",
     "@types/node": "^18.19.7",
-    "@typescript-eslint/parser": "^6.18.1",
+    "@typescript-eslint/parser": "^7.0.2",
     "@vercel/ncc": "^0.38.1",
     "eslint": "^8.56.0",
     "eslint-plugin-github": "^4.10.1",
