@@ -16,8 +16,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.ref }}
 
       - uses: actions/setup-node@v4
         with:
@@ -34,11 +32,6 @@ jobs:
 
       - name: Check if packaged properly
         run: |
-          git config --global user.name 'Paul Giberson'
-          git config --global user.email 'aknosis@users.noreply.github.com'
-          git add dist/index.js
-          git commit -m "package"
-          git push
           # If there are any unstaged or untracked files in 'dist/', then the action wasn't packaged properly
           if git diff --name-only | grep '^dist/' || git ls-files --other --exclude-standard | grep '^dist/'; then
             echo "You didn't package the action properly before pushing to remote." \
