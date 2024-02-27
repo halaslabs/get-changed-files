@@ -32,7 +32,7 @@
   "scripts": {
     "all": "yarn clean && yarn build && yarn format && yarn lint && yarn package",
     "build": "tsc",
-    "clean": "rimraf dist/**/* lib/**/*",
+    "clean": "rimraf dist/* lib/*",
     "format": "prettier --write **/*.ts",
     "format:check": "prettier --check **/*.ts",
     "lint": "eslint src/**/*.ts",
@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "@actions/core": "^1.10.1",
-    "@actions/github": "^5.1.1",
+    "@actions/github": "^6.0.0",
     "glob-regex": "^0.3.2",
     "is-glob": "^4.0.3"
   },
