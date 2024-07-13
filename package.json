@@ -1,7 +1,7 @@
 {
   "name": "get-changed-files",
   "description": "GitHub Action that gets files changed/modified in a pull request or push.",
-  "version": "2.4.2",
+  "version": "2.4.3",
   "private": true,
   "author": "Jitterbit, Inc.",
   "contributors": [
@@ -47,7 +47,7 @@
     "is-glob": "^4.0.3"
   },
   "devDependencies": {
-    "@octokit/rest": "^20.1.1",
+    "@octokit/rest": "^21.0.0",
     "@types/is-glob": "^4.0.4",
     "@types/jest": "^26.0.14",
     "@types/node": "^20",
