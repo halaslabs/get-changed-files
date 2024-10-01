@@ -1136,6 +1136,14 @@
     "@typescript-eslint/types" "7.8.0"
     "@typescript-eslint/visitor-keys" "7.8.0"
 
+"@typescript-eslint/scope-manager@8.4.0":
+  version "8.4.0"
+  resolved "https://registry.yarnpkg.com/@typescript-eslint/scope-manager/-/scope-manager-8.4.0.tgz#8a13d3c0044513d7960348db6f4789d2a06fa4b4"
+  integrity sha512-n2jFxLeY0JmKfUqy3P70rs6vdoPjHK8P/w+zJcV3fk0b0BwRXC/zxRTEnAsgYT7MwdQDt/ZEbtdzdVC+hcpF0A==
+  dependencies:
+    "@typescript-eslint/types" "8.4.0"
+    "@typescript-eslint/visitor-keys" "8.4.0"
+
 "@typescript-eslint/scope-manager@8.8.0":
   version "8.8.0"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/scope-manager/-/scope-manager-8.8.0.tgz#30b23a6ae5708bd7882e40675ef2f1b2beac741f"
@@ -1163,6 +1171,11 @@
   version "7.8.0"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/types/-/types-7.8.0.tgz#1fd2577b3ad883b769546e2d1ef379f929a7091d"
   integrity sha512-wf0peJ+ZGlcH+2ZS23aJbOv+ztjeeP8uQ9GgwMJGVLx/Nj9CJt17GWgWWoSmoRVKAX2X+7fzEnAjxdvK2gqCLw==
+
+"@typescript-eslint/types@8.4.0":
+  version "8.4.0"
+  resolved "https://registry.yarnpkg.com/@typescript-eslint/types/-/types-8.4.0.tgz#b44d6a90a317a6d97a3e5fabda5196089eec6171"
+  integrity sha512-T1RB3KQdskh9t3v/qv7niK6P8yvn7ja1mS7QK7XfRVL6wtZ8/mFs/FHf4fKvTA0rKnqnYxl/uHFNbnEt0phgbw==
 
 "@typescript-eslint/types@8.8.0":
   version "8.8.0"
@@ -1192,6 +1205,20 @@
     "@typescript-eslint/visitor-keys" "7.8.0"
     debug "^4.3.4"
     globby "^11.1.0"
+    is-glob "^4.0.3"
+    minimatch "^9.0.4"
+    semver "^7.6.0"
+    ts-api-utils "^1.3.0"
+
+"@typescript-eslint/typescript-estree@8.4.0":
+  version "8.4.0"
+  resolved "https://registry.yarnpkg.com/@typescript-eslint/typescript-estree/-/typescript-estree-8.4.0.tgz#00ed79ae049e124db37315cde1531a900a048482"
+  integrity sha512-kJ2OIP4dQw5gdI4uXsaxUZHRwWAGpREJ9Zq6D5L0BweyOrWsL6Sz0YcAZGWhvKnH7fm1J5YFE1JrQL0c9dd53A==
+  dependencies:
+    "@typescript-eslint/types" "8.4.0"
+    "@typescript-eslint/visitor-keys" "8.4.0"
+    debug "^4.3.4"
+    fast-glob "^3.3.2"
     is-glob "^4.0.3"
     minimatch "^9.0.4"
     semver "^7.6.0"
@@ -1250,6 +1277,14 @@
     "@typescript-eslint/types" "7.8.0"
     eslint-visitor-keys "^3.4.3"
 
+"@typescript-eslint/visitor-keys@8.4.0":
+  version "8.4.0"
+  resolved "https://registry.yarnpkg.com/@typescript-eslint/visitor-keys/-/visitor-keys-8.4.0.tgz#1e8a8b8fd3647db1e42361fdd8de3e1679dec9d2"
+  integrity sha512-zTQD6WLNTre1hj5wp09nBIDiOc2U5r/qmzo7wxPn4ZgAjHql09EofqhF9WF+fZHzL5aCyaIpPcT2hyxl73kr9A==
+  dependencies:
+    "@typescript-eslint/types" "8.4.0"
+    eslint-visitor-keys "^3.4.3"
+
 "@typescript-eslint/visitor-keys@8.8.0":
   version "8.8.0"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/visitor-keys/-/visitor-keys-8.8.0.tgz#f93965abd38c82a1a1f5574290a50d02daf1cd2e"
@@ -1263,10 +1298,10 @@
   resolved "https://registry.yarnpkg.com/@ungap/structured-clone/-/structured-clone-1.2.0.tgz#756641adb587851b5ccb3e095daf27ae581c8406"
   integrity sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==
 
-"@vercel/ncc@^0.38.1":
-  version "0.38.1"
-  resolved "https://registry.yarnpkg.com/@vercel/ncc/-/ncc-0.38.1.tgz#13f08738111e1d9e8a22fd6141f3590e54d9a60e"
-  integrity sha512-IBBb+iI2NLu4VQn3Vwldyi2QwaXt5+hTyh58ggAMoCGE6DJmPvwL3KPBWcJl1m9LYPChBLE980Jw+CS4Wokqxw==
+"@vercel/ncc@^0.38.2":
+  version "0.38.2"
+  resolved "https://registry.yarnpkg.com/@vercel/ncc/-/ncc-0.38.2.tgz#d35c3a74c671699ccf316f74bf0ecab6b60e312b"
+  integrity sha512-3yel3jaxUg9pHBv4+KeC9qlbdZPug+UMtUOlhvpDYCMSgcNSrS2Hv1LoqMsOV7hf2lYscx+BESfJOIla1WsmMQ==
 
 abab@^2.0.3, abab@^2.0.5:
   version "2.0.6"
