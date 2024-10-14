@@ -30,7 +30,7 @@
     "node": "^20.0.0"
   },
   "scripts": {
-    "all": "yarn clean && yarn build && yarn format && yarn lint && yarn package",
+    "all": "yarn --ignore-engines clean && yarn --ignore-engines build && yarn --ignore-engines format && yarn --ignore-engines lint && yarn --ignore-engines package",
     "build": "tsc",
     "clean": "rimraf dist/* lib/*",
     "format": "prettier --write **/*.ts",
@@ -48,6 +48,7 @@
   },
   "devDependencies": {
     "@octokit/rest": "^21.0.2",
+    "@stylistic/eslint-plugin-ts": "^2.9.0",
     "@types/is-glob": "^4.0.4",
     "@types/jest": "^26.0.14",
     "@types/node": "^20",
