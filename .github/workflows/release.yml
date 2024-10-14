@@ -1,0 +1,23 @@
+name: Release Tagging
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  tag-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extract major version
+        id: extract_major_version
+        run: |
+          echo "RELEASE_TAG=${{ github.event.release.tag_name }}"
+          echo "MAJOR_VERSION=$(echo $RELEASE_TAG | grep -oP 'v\K[0-9]+')" >> $GITHUB_ENV
+          echo "Major version: $MAJOR_VERSION"
+      
+      - name: Push major version tag
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git tag "v${MAJOR_VERSION}"
+          git push -f origin "v${MAJOR_VERSION}"
