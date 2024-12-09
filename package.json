@@ -52,7 +52,7 @@
     "@types/is-glob": "^4.0.4",
     "@types/jest": "^26.0.14",
     "@types/node": "^20",
-    "@typescript-eslint/parser": "^8.8.1",
+    "@typescript-eslint/parser": "^8.17.0",
     "@vercel/ncc": "^0.38.2",
     "eslint": "^8.57.1",
     "eslint-plugin-github": "^5.0.2",
