@@ -48,7 +48,7 @@
   },
   "devDependencies": {
     "@octokit/rest": "^21.1.0",
-    "@stylistic/eslint-plugin-ts": "^2.13.0",
+    "@stylistic/eslint-plugin-ts": "^3.0.1",
     "@types/is-glob": "^4.0.4",
     "@types/jest": "^26.0.14",
     "@types/node": "^20",
