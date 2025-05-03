@@ -5,17 +5,16 @@ permissions:
 
 on:
   pull_request:
-  push:
-    branches:
-      - main
 
 jobs:
   validate:
-    name: Test and Validate Build
+    name: Test and Build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
 
       - uses: actions/setup-node@v4
         with:
@@ -32,7 +31,6 @@ jobs:
 
       - name: Check if packaged properly
         run: |
-          # If there are any unstaged or untracked files in 'dist/', then the action wasn't packaged properly
           if git diff --name-only | grep '^dist/' || git ls-files --other --exclude-standard | grep '^dist/'; then
             git config --global user.name "github-actions[bot]"
             git config --global user.email "halaslabs@users.noreply.github.com"
