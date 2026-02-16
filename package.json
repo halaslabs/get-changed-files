@@ -47,7 +47,7 @@
     "is-glob": "^4.0.3"
   },
   "devDependencies": {
-    "@octokit/rest": "^22.0.0",
+    "@octokit/rest": "^22.0.1",
     "@stylistic/eslint-plugin-ts": "^4.4.1",
     "@types/is-glob": "^4.0.4",
     "@types/jest": "^27.5.1",
