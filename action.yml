@@ -44,5 +44,5 @@ outputs:
     description: >
       Array of all added and modified files.
 runs:
-  using: node20
+  using: node24
   main: dist/index.js

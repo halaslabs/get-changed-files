@@ -7,7 +7,7 @@
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.filterFiles = void 0;
+exports.filterFiles = filterFiles;
 function filterFiles(filters, exclusions, files) {
     if (filters.length === 0 && exclusions.length === 0) {
         return files;
@@ -30,7 +30,6 @@ function filterFiles(filters, exclusions, files) {
     }
     return files;
 }
-exports.filterFiles = filterFiles;
 
 
 /***/ }),
@@ -41,7 +40,7 @@ exports.filterFiles = filterFiles;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.formatFiles = void 0;
+exports.formatFiles = formatFiles;
 function formatFiles(files, format) {
     const all = [];
     const added = [];
@@ -122,7 +121,6 @@ function formatFiles(files, format) {
         addedModifiedFormatted
     };
 }
-exports.formatFiles = formatFiles;
 
 
 /***/ }),
@@ -148,76 +146,73 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 }) : function(o, v) {
     o["default"] = v;
 });
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getFileChanges = void 0;
+exports.getFileChanges = getFileChanges;
 const core = __importStar(__nccwpck_require__(7484));
 const github_1 = __nccwpck_require__(3228);
-function getFileChanges(token) {
-    var _a, _b, _c, _d;
-    return __awaiter(this, void 0, void 0, function* () {
-        // Debug log the payload.
-        core.debug(`Payload keys: ${Object.keys(github_1.context.payload)}`);
-        // Define the base and head commits to be extracted from the payload.
-        let base;
-        let head;
-        switch (github_1.context.eventName) {
-            case 'pull_request':
-                base = (_b = (_a = github_1.context.payload.pull_request) === null || _a === void 0 ? void 0 : _a.base) === null || _b === void 0 ? void 0 : _b.sha;
-                head = (_d = (_c = github_1.context.payload.pull_request) === null || _c === void 0 ? void 0 : _c.head) === null || _d === void 0 ? void 0 : _d.sha;
-                break;
-            case 'push':
-                base = github_1.context.payload.before;
-                head = github_1.context.payload.after;
-                break;
-            default:
-                core.debug(`There is no explicit base in ${github_1.context.eventName} events, skipping compare API request.`);
-                return [];
-        }
-        // Log the base and head commits
-        core.info(`Base commit: ${base}`);
-        core.info(`Head commit: ${head}`);
-        // Ensure that the base and head properties are set on the payload.
-        if (!base || !head) {
-            throw new Error(`The base and head commits are missing from the payload for this ${github_1.context.eventName} event. ` +
-                "Please submit an issue on this action's GitHub repo.");
-        }
-        // Use GitHub's compare two commits API.
-        // https://developer.github.com/v3/repos/commits/#compare-two-commits
-        const response = yield (0, github_1.getOctokit)(token).rest.repos.compareCommitsWithBasehead({
-            basehead: `${base}...${head}`,
-            owner: github_1.context.repo.owner,
-            repo: github_1.context.repo.repo
-        });
-        core.debug(`Response: ${JSON.stringify(response)}`);
-        // Ensure that the request was successful.
-        if (response.status !== 200) {
-            throw new Error(`The GitHub API for comparing the base and head commits for this ${github_1.context.eventName} event returned ${response.status}, expected 200. ` +
-                "Please submit an issue on this action's GitHub repo.");
-        }
-        if (response.data.files === undefined) {
-            throw new Error('Unexpected response from GitHub API, files property is undefined.');
-        }
-        // Get the changed files from the response payload.
-        return response.data.files;
+async function getFileChanges(token) {
+    // Debug log the payload.
+    core.debug(`Payload keys: ${Object.keys(github_1.context.payload)}`);
+    // Define the base and head commits to be extracted from the payload.
+    let base;
+    let head;
+    switch (github_1.context.eventName) {
+        case 'pull_request':
+            base = github_1.context.payload.pull_request?.base?.sha;
+            head = github_1.context.payload.pull_request?.head?.sha;
+            break;
+        case 'push':
+            base = github_1.context.payload.before;
+            head = github_1.context.payload.after;
+            break;
+        default:
+            core.debug(`There is no explicit base in ${github_1.context.eventName} events, skipping compare API request.`);
+            return [];
+    }
+    // Log the base and head commits
+    core.info(`Base commit: ${base}`);
+    core.info(`Head commit: ${head}`);
+    // Ensure that the base and head properties are set on the payload.
+    if (!base || !head) {
+        throw new Error(`The base and head commits are missing from the payload for this ${github_1.context.eventName} event. ` +
+            "Please submit an issue on this action's GitHub repo.");
+    }
+    // Use GitHub's compare two commits API.
+    // https://developer.github.com/v3/repos/commits/#compare-two-commits
+    const response = await (0, github_1.getOctokit)(token).rest.repos.compareCommitsWithBasehead({
+        basehead: `${base}...${head}`,
+        owner: github_1.context.repo.owner,
+        repo: github_1.context.repo.repo
     });
+    core.debug(`Response: ${JSON.stringify(response)}`);
+    // Ensure that the request was successful.
+    if (response.status !== 200) {
+        throw new Error(`The GitHub API for comparing the base and head commits for this ${github_1.context.eventName} event returned ${response.status}, expected 200. ` +
+            "Please submit an issue on this action's GitHub repo.");
+    }
+    if (response.data.files === undefined) {
+        throw new Error('Unexpected response from GitHub API, files property is undefined.');
+    }
+    // Get the changed files from the response payload.
+    return response.data.files;
 }
-exports.getFileChanges = getFileChanges;
 
 
 /***/ }),
@@ -243,18 +238,28 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 }) : function(o, v) {
     o["default"] = v;
 });
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getInputs = void 0;
+exports.getInputs = getInputs;
 const core = __importStar(__nccwpck_require__(7484));
 const is_glob_1 = __importDefault(__nccwpck_require__(1925));
 const glob_regex_1 = __importDefault(__nccwpck_require__(2732));
@@ -290,7 +295,6 @@ function getInputs() {
     });
     return { token, format, filters, exclusions };
 }
-exports.getInputs = getInputs;
 
 
 /***/ }),
@@ -316,58 +320,57 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 }) : function(o, v) {
     o["default"] = v;
 });
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(7484));
 const filter_1 = __nccwpck_require__(8504);
 const format_1 = __nccwpck_require__(9817);
 const github_1 = __nccwpck_require__(6681);
 const input_1 = __nccwpck_require__(2868);
-function run() {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            // resolve inputs
-            const inputs = (0, input_1.getInputs)();
-            // compare commits
-            const files = yield (0, github_1.getFileChanges)(inputs.token);
-            const filteredFiles = (0, filter_1.filterFiles)(inputs.filters, inputs.exclusions, files);
-            // Format the changed files.
-            const { allFormatted, addedFormatted, modifiedFormatted, removedFormatted, renamedFormatted, addedModifiedFormatted } = (0, format_1.formatFiles)(filteredFiles, inputs.format);
-            // Log the output values.
-            core.info(`All: ${allFormatted}`);
-            core.info(`Added: ${addedFormatted}`);
-            core.info(`Modified: ${modifiedFormatted}`);
-            core.info(`Removed: ${removedFormatted}`);
-            core.info(`Renamed: ${renamedFormatted}`);
-            core.info(`Added or modified: ${addedModifiedFormatted}`);
-            // Set step output context.
-            core.setOutput('all', allFormatted);
-            core.setOutput('added', addedFormatted);
-            core.setOutput('modified', modifiedFormatted);
-            core.setOutput('removed', removedFormatted);
-            core.setOutput('renamed', renamedFormatted);
-            core.setOutput('added_modified', addedModifiedFormatted);
-        }
-        catch (error) {
-            if (error instanceof Error)
-                core.setFailed(error.message);
-        }
-    });
+async function run() {
+    try {
+        // resolve inputs
+        const inputs = (0, input_1.getInputs)();
+        // compare commits
+        const files = await (0, github_1.getFileChanges)(inputs.token);
+        const filteredFiles = (0, filter_1.filterFiles)(inputs.filters, inputs.exclusions, files);
+        // Format the changed files.
+        const { allFormatted, addedFormatted, modifiedFormatted, removedFormatted, renamedFormatted, addedModifiedFormatted } = (0, format_1.formatFiles)(filteredFiles, inputs.format);
+        // Log the output values.
+        core.info(`All: ${allFormatted}`);
+        core.info(`Added: ${addedFormatted}`);
+        core.info(`Modified: ${modifiedFormatted}`);
+        core.info(`Removed: ${removedFormatted}`);
+        core.info(`Renamed: ${renamedFormatted}`);
+        core.info(`Added or modified: ${addedModifiedFormatted}`);
+        // Set step output context.
+        core.setOutput('all', allFormatted);
+        core.setOutput('added', addedFormatted);
+        core.setOutput('modified', modifiedFormatted);
+        core.setOutput('removed', removedFormatted);
+        core.setOutput('renamed', renamedFormatted);
+        core.setOutput('added_modified', addedModifiedFormatted);
+    }
+    catch (error) {
+        if (error instanceof Error)
+            core.setFailed(error.message);
+    }
 }
 run();
 
