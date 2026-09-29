@@ -41,7 +41,7 @@
     "watch": "tsc -w -p ."
   },
   "dependencies": {
-    "@actions/core": "^1.11.1",
+    "@actions/core": "^3.0.0",
     "@actions/github": "^6.0.1",
     "glob-regex": "^0.3.2",
     "is-glob": "^4.0.3"
